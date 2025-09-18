@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { UserEntity } from './user.entity';
 
-@Entity('session')
+@Entity('sessions')
 export class SessionEntity extends AbstractEntity {
   constructor(data?: Partial<SessionEntity>) {
     super();

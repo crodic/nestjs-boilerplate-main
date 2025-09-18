@@ -3,6 +3,9 @@ import { OffsetPaginatedDto } from '@/common/dto/offset-pagination/paginated.dto
 import { Uuid } from '@/common/types/common.type';
 import { CurrentUser } from '@/decorators/current-user.decorator';
 import { ApiAuth } from '@/decorators/http.decorators';
+import { CheckPolicies } from '@/decorators/policies.decorator';
+import { AppAbility } from '@/utils/ability.factory';
+import { AppActions, AppSubjects } from '@/utils/permissions.constant';
 import {
   Body,
   Controller,
@@ -86,6 +89,9 @@ export class UserController {
 
   @Patch(':id')
   @ApiAuth({ type: UserResDto, summary: 'Update user' })
+  @CheckPolicies((ability: AppAbility) =>
+    ability.can(AppActions.Update, AppSubjects.User),
+  )
   @ApiParam({ name: 'id', type: 'String' })
   updateUser(
     @Param('id', ParseUUIDPipe) id: Uuid,

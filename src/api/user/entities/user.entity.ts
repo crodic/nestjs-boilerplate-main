@@ -15,7 +15,7 @@ import {
 } from 'typeorm';
 import { SessionEntity } from './session.entity';
 
-@Entity('user')
+@Entity('users')
 export class UserEntity extends AbstractEntity {
   constructor(data?: Partial<UserEntity>) {
     super();

@@ -11,7 +11,7 @@ import {
   Relation,
 } from 'typeorm';
 
-@Entity('post')
+@Entity('posts')
 export class PostEntity extends AbstractEntity {
   constructor(data?: Partial<PostEntity>) {
     super();

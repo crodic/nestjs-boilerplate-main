@@ -5,7 +5,7 @@ export class CreatePostTable1722352657866 implements MigrationInterface {
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
-      CREATE TABLE "post" (
+      CREATE TABLE "posts" (
         "id" uuid NOT NULL DEFAULT uuid_generate_v4(),
         "title" character varying NOT NULL,
         "slug" character varying NOT NULL,
@@ -22,17 +22,17 @@ export class CreatePostTable1722352657866 implements MigrationInterface {
   `);
 
     await queryRunner.query(`
-      ALTER TABLE "post"
-      ADD CONSTRAINT "FK_post_user_id" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE NO ACTION ON UPDATE NO ACTION
+      ALTER TABLE "posts"
+      ADD CONSTRAINT "FK_post_user_id" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION
   `);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
-      ALTER TABLE "post" DROP CONSTRAINT "FK_post_user_id"
+      ALTER TABLE "posts" DROP CONSTRAINT "FK_post_user_id"
     `);
     await queryRunner.query(`
-      DROP TABLE "post"
+      DROP TABLE "posts"
     `);
   }
 }
