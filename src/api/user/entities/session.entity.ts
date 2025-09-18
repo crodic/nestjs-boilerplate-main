@@ -34,6 +34,9 @@ export class SessionEntity extends AbstractEntity {
   })
   userId: Uuid;
 
+  @Column({ type: 'enum', enum: ['portal', 'client'], nullable: false })
+  loginScope: 'portal' | 'client';
+
   @JoinColumn({
     name: 'user_id',
     referencedColumnName: 'id',

@@ -27,6 +27,9 @@ export const ALL_PERMISSIONS = [
   { name: `${AppActions.Create}:${AppSubjects.Role}` },
   { name: `${AppActions.Update}:${AppSubjects.Role}` },
   { name: `${AppActions.Delete}:${AppSubjects.Role}` },
+
+  // SUPER
+  { name: `${AppActions.Manage}:${AppSubjects.All}` },
 ];
 
 export const ADMIN_FULL_ACCESS = { action: AppActions.Manage, subject: 'all' };

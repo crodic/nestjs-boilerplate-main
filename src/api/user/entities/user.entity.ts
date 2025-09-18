@@ -9,10 +9,12 @@ import {
   DeleteDateColumn,
   Entity,
   Index,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   Relation,
 } from 'typeorm';
+import { RoleEntity } from './role.entity';
 import { SessionEntity } from './session.entity';
 
 @Entity('users')
@@ -60,6 +62,9 @@ export class UserEntity extends AbstractEntity {
 
   @OneToMany(() => PostEntity, (post) => post.user)
   posts: Relation<PostEntity[]>;
+
+  @ManyToOne(() => RoleEntity, (role) => role.users, { eager: true })
+  role?: RoleEntity;
 
   @BeforeInsert()
   @BeforeUpdate()

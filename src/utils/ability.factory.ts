@@ -1,4 +1,5 @@
-import { Admin } from '@/api/admin/entities/admin.entity';
+import { UserEntity } from '@/api/user/entities/user.entity';
+import { SYSTEM_ROLE_NAME } from '@/constants/app.constant';
 import {
   AbilityBuilder,
   AbilityClass,
@@ -9,20 +10,20 @@ import {
 import { Injectable } from '@nestjs/common';
 import { AppActions, AppSubjects } from './permissions.constant';
 
-export type Subjects = InferSubjects<typeof Admin> | AppSubjects | 'all';
+export type Subjects = InferSubjects<typeof UserEntity> | AppSubjects | 'all';
 export type AppAbility = PureAbility<[string, Subjects]>;
 
 @Injectable()
 export class CaslAbilityFactory {
-  createForAdmin(admin: Admin) {
+  createForUser(user: UserEntity) {
     const { can, build } = new AbilityBuilder<AppAbility>(
       PureAbility as AbilityClass<AppAbility>,
     );
 
-    if (admin.role?.name === 'admin') {
+    if (user.role?.name === SYSTEM_ROLE_NAME) {
       can(AppActions.Manage, AppSubjects.All);
     } else {
-      const perms = admin.role?.permissions || [];
+      const perms = user.role?.permissions || [];
       perms.forEach((perm) => {
         const [action, subject] = perm.split(':');
         if (action && subject) {

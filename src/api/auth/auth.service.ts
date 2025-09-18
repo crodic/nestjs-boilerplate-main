@@ -1,7 +1,7 @@
 import { IEmailJob, IVerifyEmailJob } from '@/common/interfaces/job.interface';
 import { Branded } from '@/common/types/types';
 import { AllConfigType } from '@/config/config.type';
-import { SYSTEM_USER_ID } from '@/constants/app.constant';
+import { LoginScope, SYSTEM_USER_ID } from '@/constants/app.constant';
 import { CacheKey } from '@/constants/cache.constant';
 import { ErrorCode } from '@/constants/error-code.constant';
 import { JobName, QueueName } from '@/constants/job.constant';
@@ -83,6 +83,7 @@ export class AuthService {
       userId: user.id,
       createdBy: SYSTEM_USER_ID,
       updatedBy: SYSTEM_USER_ID,
+      loginScope: LoginScope.PORTAL,
     });
     await session.save();
 
@@ -94,6 +95,7 @@ export class AuthService {
 
     return plainToInstance(LoginResDto, {
       userId: user.id,
+      scope: LoginScope.PORTAL,
       ...token,
     });
   }
