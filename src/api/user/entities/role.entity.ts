@@ -1,5 +1,11 @@
 import { AbstractEntity } from '@/database/entities/abstract.entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  DeleteDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { UserEntity } from './user.entity';
 
 @Entity('roles')
@@ -23,4 +29,11 @@ export class RoleEntity extends AbstractEntity {
 
   @OneToMany(() => UserEntity, (user) => user.role)
   users: UserEntity[];
+
+  @DeleteDateColumn({
+    name: 'deleted_at',
+    type: 'timestamptz',
+    default: null,
+  })
+  deletedAt: Date;
 }

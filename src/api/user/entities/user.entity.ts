@@ -9,6 +9,7 @@ import {
   DeleteDateColumn,
   Entity,
   Index,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -64,6 +65,11 @@ export class UserEntity extends AbstractEntity {
   posts: Relation<PostEntity[]>;
 
   @ManyToOne(() => RoleEntity, (role) => role.users, { eager: true })
+  @JoinColumn({
+    name: 'role_id',
+    referencedColumnName: 'id',
+    foreignKeyConstraintName: 'FK_user_role',
+  })
   role?: RoleEntity;
 
   @BeforeInsert()
