@@ -3,6 +3,10 @@ import { OffsetPaginatedDto } from '@/common/dto/offset-pagination/paginated.dto
 import { Uuid } from '@/common/types/common.type';
 import { CurrentUser } from '@/decorators/current-user.decorator';
 import { ApiAuth } from '@/decorators/http.decorators';
+import { CheckPolicies } from '@/decorators/policies.decorator';
+import { PoliciesGuard } from '@/guards/policies.guard';
+import { AppAbility } from '@/utils/ability.factory';
+import { AppActions, AppSubjects } from '@/utils/permissions.constant';
 import {
   Body,
   Controller,
@@ -14,6 +18,7 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
 import { CreateUserReqDto } from './dto/create-user.req.dto';
@@ -28,6 +33,7 @@ import { UserService } from './user.service';
   path: 'users',
   version: '1',
 })
+@UseGuards(PoliciesGuard)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -58,6 +64,9 @@ export class UserController {
     summary: 'List users',
     isPaginated: true,
   })
+  @CheckPolicies((abilyti: AppAbility) =>
+    abilyti.can(AppActions.Read, AppSubjects.User),
+  )
   async findAllUsers(
     @Query() reqDto: ListUserReqDto,
   ): Promise<OffsetPaginatedDto<UserResDto>> {
@@ -86,6 +95,9 @@ export class UserController {
 
   @Patch(':id')
   @ApiAuth({ type: UserResDto, summary: 'Update user' })
+  @CheckPolicies((ability: AppAbility) =>
+    ability.can(AppActions.Update, AppSubjects.User),
+  )
   @ApiParam({ name: 'id', type: 'String' })
   updateUser(
     @Param('id', ParseUUIDPipe) id: Uuid,

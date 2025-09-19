@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { UserEntity } from './user.entity';
 
-@Entity('session')
+@Entity('sessions')
 export class SessionEntity extends AbstractEntity {
   constructor(data?: Partial<SessionEntity>) {
     super();
@@ -33,6 +33,9 @@ export class SessionEntity extends AbstractEntity {
     type: 'uuid',
   })
   userId: Uuid;
+
+  @Column({ type: 'enum', enum: ['portal', 'client'], nullable: false })
+  loginScope: 'portal' | 'client';
 
   @JoinColumn({
     name: 'user_id',

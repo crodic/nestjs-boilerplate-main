@@ -9,13 +9,16 @@ import {
   DeleteDateColumn,
   Entity,
   Index,
+  JoinColumn,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   Relation,
 } from 'typeorm';
+import { RoleEntity } from './role.entity';
 import { SessionEntity } from './session.entity';
 
-@Entity('user')
+@Entity('users')
 export class UserEntity extends AbstractEntity {
   constructor(data?: Partial<UserEntity>) {
     super();
@@ -60,6 +63,14 @@ export class UserEntity extends AbstractEntity {
 
   @OneToMany(() => PostEntity, (post) => post.user)
   posts: Relation<PostEntity[]>;
+
+  @ManyToOne(() => RoleEntity, (role) => role.users, { eager: true })
+  @JoinColumn({
+    name: 'role_id',
+    referencedColumnName: 'id',
+    foreignKeyConstraintName: 'FK_user_role',
+  })
+  role?: RoleEntity;
 
   @BeforeInsert()
   @BeforeUpdate()

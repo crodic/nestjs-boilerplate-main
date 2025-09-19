@@ -20,6 +20,11 @@ export enum Order {
   DESC = 'DESC',
 }
 
+export enum LoginScope {
+  PORTAL = 'portal',
+  CLIENT = 'client',
+}
+
 // Redact value of these paths from logs
 export const loggingRedactPaths = [
   'req.headers.authorization',
@@ -33,3 +38,9 @@ export const loggingRedactPaths = [
 export const DEFAULT_PAGE_LIMIT = 10;
 export const DEFAULT_CURRENT_PAGE = 1;
 export const SYSTEM_USER_ID = 'system';
+export const SYSTEM_ROLE_NAME = 'SUPER ADMIN';
+export const SUPER_ADMIN_ACCOUNT = {
+  email: 'admin@email.com',
+  password: 'admin@2025',
+  username: 'admin2025',
+};

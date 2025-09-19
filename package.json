@@ -19,10 +19,11 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "typeorm": "env-cmd typeorm-ts-node-commonjs -d src/database/data-source.ts",
+    "typeorm:create": "env-cmd typeorm-ts-node-commonjs",
     "migration:up": "pnpm typeorm migration:run",
     "migration:down": "pnpm typeorm migration:revert",
     "migration:show": "pnpm typeorm migration:show",
-    "migration:create": "typeorm migration:create",
+    "migration:create": "pnpm typeorm:create migration:create",
     "migration:generate": "pnpm typeorm migration:generate --pretty",
     "db:create": "env-cmd ts-node ./node_modules/typeorm-extension/bin/cli.cjs db:create",
     "db:drop": "env-cmd ts-node ./node_modules/typeorm-extension/bin/cli.cjs db:drop",
@@ -33,6 +34,7 @@
     "docs:build": "vuepress build docs"
   },
   "dependencies": {
+    "@casl/ability": "^6.7.3",
     "@nestjs-modules/mailer": "^2.0.2",
     "@nestjs/axios": "^3.1.2",
     "@nestjs/bullmq": "^10.2.2",
@@ -79,6 +81,7 @@
     "@nestjs/testing": "^10.4.6",
     "@swc/cli": "^0.5.0",
     "@swc/core": "^1.7.42",
+    "@types/bcrypt": "^6.0.0",
     "@types/compression": "^1.7.5",
     "@types/eslint__js": "^8.42.3",
     "@types/express": "^5.0.0",

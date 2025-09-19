@@ -11,6 +11,7 @@ import {
   IsInt,
   IsJWT,
   IsNumber,
+  IsObject,
   IsOptional,
   IsPositive,
   IsString,
@@ -50,6 +51,10 @@ interface IStringFieldOptions extends IFieldOptions {
 
 interface IEnumFieldOptions extends IFieldOptions {
   enumName?: string;
+}
+
+interface IJsonFieldOptions extends IFieldOptions {
+  valueType?: string;
 }
 
 type IBooleanFieldOptions = IFieldOptions;
@@ -444,6 +449,42 @@ export function ClassFieldOptional<TClass extends Constructor>(
   return applyDecorators(
     IsOptional({ each: options.each }),
     ClassField(getClass, { required: false, ...options }),
+  );
+}
+
+export function JsonField(
+  options: Omit<ApiPropertyOptions, 'type'> & IJsonFieldOptions = {},
+): PropertyDecorator {
+  const decorators = [Type(() => Object), IsObject({ each: options.each })];
+
+  if (options.nullable) {
+    decorators.push(IsNullable({ each: options.each }));
+  } else {
+    decorators.push(NotEquals(null, { each: options.each }));
+  }
+
+  if (options.swagger !== false) {
+    const { required = true, ...restOptions } = options;
+    decorators.push(
+      ApiProperty({
+        type: Object,
+        required: !!required,
+        ...restOptions,
+        isArray: options.each,
+      }),
+    );
+  }
+
+  return applyDecorators(...decorators);
+}
+
+export function JsonFieldOptional(
+  options: Omit<ApiPropertyOptions, 'type' | 'required'> &
+    IJsonFieldOptions = {},
+): PropertyDecorator {
+  return applyDecorators(
+    IsOptional({ each: options.each }),
+    JsonField({ required: false, ...options }),
   );
 }
 
