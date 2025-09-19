@@ -12,14 +12,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import assert from 'assert';
 import { plainToInstance } from 'class-transformer';
 import { Repository } from 'typeorm';
-import { CreateRoleReqDto } from './dto/create-role.req.dto';
 import { CreateUserReqDto } from './dto/create-user.req.dto';
 import { ListUserReqDto } from './dto/list-user.req.dto';
 import { LoadMoreUsersReqDto } from './dto/load-more-users.req.dto';
-import { RoleResDto } from './dto/role.res.dto';
 import { UpdateUserReqDto } from './dto/update-user.req.dto';
 import { UserResDto } from './dto/user.res.dto';
-import { RoleEntity } from './entities/role.entity';
 import { UserEntity } from './entities/user.entity';
 
 @Injectable()
@@ -29,8 +26,6 @@ export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
-    @InjectRepository(RoleEntity)
-    private readonly roleRespository: Repository<RoleEntity>,
   ) {}
 
   async create(dto: CreateUserReqDto): Promise<UserResDto> {
@@ -129,19 +124,5 @@ export class UserService {
   async remove(id: Uuid) {
     await this.userRepository.findOneByOrFail({ id });
     await this.userRepository.softDelete(id);
-  }
-
-  async createRole(dto: CreateRoleReqDto) {
-    const newRole = new RoleEntity({
-      ...dto,
-      createdBy: SYSTEM_USER_ID,
-      updatedBy: SYSTEM_USER_ID,
-    });
-
-    const savedRole = await this.roleRespository.save(newRole);
-
-    this.logger.debug(savedRole);
-
-    return plainToInstance(RoleResDto, savedRole);
   }
 }

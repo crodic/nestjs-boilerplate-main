@@ -21,11 +21,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
-import { CreateRoleReqDto } from './dto/create-role.req.dto';
 import { CreateUserReqDto } from './dto/create-user.req.dto';
 import { ListUserReqDto } from './dto/list-user.req.dto';
 import { LoadMoreUsersReqDto } from './dto/load-more-users.req.dto';
-import { RoleResDto } from './dto/role.res.dto';
 import { UpdateUserReqDto } from './dto/update-user.req.dto';
 import { UserResDto } from './dto/user.res.dto';
 import { UserService } from './user.service';
@@ -66,8 +64,8 @@ export class UserController {
     summary: 'List users',
     isPaginated: true,
   })
-  @CheckPolicies((abilyti: AppAbility) =>
-    abilyti.can(AppActions.Read, AppSubjects.User),
+  @CheckPolicies((ability: AppAbility) =>
+    ability.can(AppActions.Read, AppSubjects.User),
   )
   async findAllUsers(
     @Query() reqDto: ListUserReqDto,
@@ -122,14 +120,5 @@ export class UserController {
   @Post('me/change-password')
   async changePassword() {
     return 'change-password';
-  }
-
-  @Post('roles')
-  @ApiAuth()
-  @CheckPolicies((ability: AppAbility) =>
-    ability.can(AppActions.Create, AppSubjects.Role),
-  )
-  async createNewRole(@Body() reqDto: CreateRoleReqDto): Promise<RoleResDto> {
-    return await this.userService.createRole(reqDto);
   }
 }

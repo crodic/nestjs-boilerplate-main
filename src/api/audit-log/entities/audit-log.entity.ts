@@ -16,22 +16,22 @@ export class AuditLogEntity {
   entity: string;
 
   @Index()
-  @Column({ nullable: true })
-  entity_id: string;
+  @Column({ nullable: true, name: 'entity_id' })
+  entityId: string;
 
   @Column({ type: 'varchar' })
   action: 'INSERT' | 'UPDATE' | 'DELETE';
 
-  @Column('json', { nullable: true })
-  old_value: any;
+  @Column('json', { nullable: true, name: 'old_value' })
+  oldValue: any;
 
-  @Column('json', { nullable: true })
-  new_value: any;
+  @Column('json', { nullable: true, name: 'new_value' })
+  newValue: any;
 
   @Index()
-  @Column({ nullable: true })
-  user_id: string;
+  @Column({ nullable: true, name: 'user_id' })
+  userId: string;
 
-  @CreateDateColumn()
-  created_at: Date;
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
 }

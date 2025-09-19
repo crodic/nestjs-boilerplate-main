@@ -45,9 +45,9 @@ export class AuditLogSubscriber implements EntitySubscriberInterface {
       entity: event.metadata.name,
       entityId: event.entity?.id ?? event.databaseEntity?.id,
       action,
-      old_value: event.databaseEntity ?? null,
-      new_value: event.entity ?? null,
-      user_id: userId,
+      oldValue: event.databaseEntity ?? null,
+      newValue: event.entity ?? null,
+      userId,
     });
 
     await auditRepo.save(log);
