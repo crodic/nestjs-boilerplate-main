@@ -1,5 +1,4 @@
 import { AuthService } from '@/api/auth/auth.service';
-import { CurrentUserService } from '@/common/services/current-user.service';
 import { IS_AUTH_OPTIONAL, IS_PUBLIC } from '@/constants/app.constant';
 import {
   CanActivate,
@@ -9,13 +8,14 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
+import { ClsService } from 'nestjs-cls';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
     private authService: AuthService,
-    private currentUser: CurrentUserService,
+    private cls: ClsService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -43,8 +43,8 @@ export class AuthGuard implements CanActivate {
 
     request['user'] = await this.authService.verifyAccessToken(accessToken);
     const userId = request.user?.id;
-    console.log(userId);
-    this.currentUser.run(userId, () => {});
+    console.log(this.cls);
+    this.cls.set('userId', userId);
 
     return true;
   }

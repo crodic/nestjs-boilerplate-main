@@ -1,5 +1,5 @@
-// src/audit-log/audit-log.subscriber.ts
-import { CurrentUserService } from '@/common/services/current-user.service';
+import { SessionEntity } from '@/api/user/entities/session.entity';
+import { ClsService } from 'nestjs-cls';
 import {
   DataSource,
   EntitySubscriberInterface,
@@ -14,7 +14,7 @@ import { AuditLogEntity } from '../entities/audit-log.entity';
 export class AuditLogSubscriber implements EntitySubscriberInterface {
   constructor(
     private dataSource: DataSource,
-    private currentUser: CurrentUserService,
+    private cls: ClsService<{ userId?: string }>,
   ) {
     this.dataSource.subscribers.push(this);
   }
@@ -32,10 +32,14 @@ export class AuditLogSubscriber implements EntitySubscriberInterface {
   }
 
   private async saveLog(action: 'INSERT' | 'UPDATE' | 'DELETE', event: any) {
-    if (event.metadata.name === AuditLogEntity.name) return;
+    if (
+      event.metadata.name === AuditLogEntity.name ||
+      event.metadata.name === SessionEntity.name
+    )
+      return;
 
     const auditRepo = event.manager.getRepository(AuditLogEntity);
-    const userId = this.currentUser.userId;
+    const userId = this.cls.get('userId');
 
     const log = auditRepo.create({
       entity: event.metadata.name,
