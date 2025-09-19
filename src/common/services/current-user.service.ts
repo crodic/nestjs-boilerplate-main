@@ -5,13 +5,11 @@ import { AsyncLocalStorage } from 'async_hooks';
 export class CurrentUserService {
   private readonly als = new AsyncLocalStorage<{ userId: string }>();
 
-  run(userId: string | undefined, callback: () => void) {
-    const store = new Map<string, any>();
-    store.set('userId', userId);
-    this.storage.run(store, callback);
+  run(userId: string, cb: () => void) {
+    this.als.run({ userId }, cb);
   }
 
-  get userId(): string | undefined {
-    return this.storage.getStore()?.get('userId');
+  get userId() {
+    return this.als.getStore()?.userId;
   }
 }
