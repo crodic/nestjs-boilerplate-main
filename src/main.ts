@@ -14,6 +14,7 @@ import helmet from 'helmet';
 import { Logger } from 'nestjs-pino';
 import { AuthService } from './api/auth/auth.service';
 import { AppModule } from './app.module';
+import { CurrentUserService } from './common/services/current-user.service';
 import { type AllConfigType } from './config/config.type';
 import { GlobalExceptionFilter } from './filters/global-exception.filter';
 import { AuthGuard } from './guards/auth.guard';
@@ -67,7 +68,9 @@ async function bootstrap() {
     type: VersioningType.URI,
   });
 
-  app.useGlobalGuards(new AuthGuard(reflector, app.get(AuthService)));
+  app.useGlobalGuards(
+    new AuthGuard(reflector, app.get(AuthService), app.get(CurrentUserService)),
+  );
   app.useGlobalFilters(new GlobalExceptionFilter(configService));
   app.useGlobalPipes(
     new ValidationPipe({

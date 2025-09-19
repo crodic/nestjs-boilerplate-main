@@ -1,4 +1,5 @@
 import { AuthService } from '@/api/auth/auth.service';
+import { CurrentUserService } from '@/common/services/current-user.service';
 import { IS_AUTH_OPTIONAL, IS_PUBLIC } from '@/constants/app.constant';
 import {
   CanActivate,
@@ -14,6 +15,7 @@ export class AuthGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
     private authService: AuthService,
+    private currentUser: CurrentUserService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -40,6 +42,9 @@ export class AuthGuard implements CanActivate {
     }
 
     request['user'] = await this.authService.verifyAccessToken(accessToken);
+    const userId = request.user?.id;
+    console.log(userId);
+    this.currentUser.run(userId, () => {});
 
     return true;
   }
