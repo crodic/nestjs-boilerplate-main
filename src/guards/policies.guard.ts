@@ -1,3 +1,4 @@
+import { UserEntity } from '@/api/user/entities/user.entity';
 import {
   CHECK_POLICIES_KEY,
   PolicyHandler,
@@ -23,7 +24,7 @@ export class PoliciesGuard implements CanActivate {
 
     const request = context
       .switchToHttp()
-      .getRequest<Request & { user: any }>();
+      .getRequest<Request & { user: UserEntity }>();
     const user = request.user;
 
     const ability = this.caslFactory.createForUser(user);

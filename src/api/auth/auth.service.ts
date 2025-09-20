@@ -21,6 +21,7 @@ import { plainToInstance } from 'class-transformer';
 import crypto from 'crypto';
 import ms from 'ms';
 import { Repository } from 'typeorm';
+import { RoleEntity } from '../user/entities/role.entity';
 import { SessionEntity } from '../user/entities/session.entity';
 import { UserEntity } from '../user/entities/user.entity';
 import { LoginReqDto } from './dto/login.req.dto';
@@ -96,8 +97,11 @@ export class AuthService {
     const token = await this.createToken({
       id: user.id,
       sessionId: session.id,
+      role: user.role,
       hash,
     });
+
+    console.log(token);
 
     return plainToInstance(LoginResDto, {
       userId: user.id,
@@ -243,6 +247,7 @@ export class AuthService {
     id: string;
     sessionId: string;
     hash: string;
+    role?: RoleEntity;
   }): Promise<Token> {
     const tokenExpiresIn = this.configService.getOrThrow('auth.expires', {
       infer: true,
@@ -253,7 +258,7 @@ export class AuthService {
       await this.jwtService.signAsync(
         {
           id: data.id,
-          role: '', // TODO: add role
+          role: data.role, // TODO: add role
           sessionId: data.sessionId,
         },
         {

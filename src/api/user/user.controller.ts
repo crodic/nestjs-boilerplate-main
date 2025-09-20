@@ -64,8 +64,8 @@ export class UserController {
     summary: 'List users',
     isPaginated: true,
   })
-  @CheckPolicies((abilyti: AppAbility) =>
-    abilyti.can(AppActions.Read, AppSubjects.User),
+  @CheckPolicies((ability: AppAbility) =>
+    ability.can(AppActions.Read, AppSubjects.User),
   )
   async findAllUsers(
     @Query() reqDto: ListUserReqDto,

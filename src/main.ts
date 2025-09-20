@@ -11,6 +11,7 @@ import { ConfigService } from '@nestjs/config';
 import { NestFactory, Reflector } from '@nestjs/core';
 import compression from 'compression';
 import helmet from 'helmet';
+import { ClsService } from 'nestjs-cls';
 import { Logger } from 'nestjs-pino';
 import { AuthService } from './api/auth/auth.service';
 import { AppModule } from './app.module';
@@ -24,6 +25,7 @@ async function bootstrap() {
     bufferLogs: true,
   });
 
+  // Use Pino Loger
   app.useLogger(app.get(Logger));
 
   // Setup security headers
@@ -32,6 +34,7 @@ async function bootstrap() {
   // For high-traffic websites in production, it is strongly recommended to offload compression from the application server - typically in a reverse proxy (e.g., Nginx). In that case, you should not use compression middleware.
   app.use(compression());
 
+  // Get all config and setup CORS
   const configService = app.get(ConfigService<AllConfigType>);
   const reflector = app.get(Reflector);
   const isDevelopment =
@@ -59,11 +62,15 @@ async function bootstrap() {
     },
   );
 
+  // Set version for app.
+  // EX: /v1/* or /v2/*
   app.enableVersioning({
     type: VersioningType.URI,
   });
 
-  app.useGlobalGuards(new AuthGuard(reflector, app.get(AuthService)));
+  app.useGlobalGuards(
+    new AuthGuard(reflector, app.get(AuthService), app.get(ClsService)),
+  );
   app.useGlobalFilters(new GlobalExceptionFilter(configService));
   app.useGlobalPipes(
     new ValidationPipe({
@@ -75,6 +82,7 @@ async function bootstrap() {
       },
     }),
   );
+  // Add a global interceptor so that we can use @Exclude, @Expose, and plainToInstance on DTOs
   app.useGlobalInterceptors(new ClassSerializerInterceptor(reflector));
 
   if (isDevelopment) {
