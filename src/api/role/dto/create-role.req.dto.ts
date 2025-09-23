@@ -1,8 +1,8 @@
 import {
+  PermissionsArrayField,
   StringField,
   StringFieldOptional,
 } from '@/decorators/field.decorators';
-import { IsPermissionsArray } from '@/decorators/validators/is-permission-array.decorator';
 
 export class CreateRoleReqDto {
   @StringField()
@@ -11,6 +11,10 @@ export class CreateRoleReqDto {
   @StringFieldOptional()
   description?: string;
 
-  @IsPermissionsArray({ message: 'Invalid permissions array' })
+  @PermissionsArrayField({
+    description: 'List permission for Role',
+    example: ['User:Read', 'User:Write'],
+    required: true,
+  })
   permissions: string[];
 }

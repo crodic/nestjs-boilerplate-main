@@ -1,4 +1,5 @@
 import { Constructor } from '@/common/types/types';
+import { ALL_PERMISSIONS } from '@/utils/permissions.constant';
 import { applyDecorators } from '@nestjs/common';
 import { ApiProperty, type ApiPropertyOptions } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
@@ -27,6 +28,7 @@ import {
 import { ToBoolean, ToLowerCase, ToUpperCase } from './transform.decorators';
 import { IsNullable } from './validators/is-nullable.decorator';
 import { IsPassword } from './validators/is-password.decorator';
+import { IsPermissionsArray } from './validators/is-permission-array.decorator';
 
 interface IFieldOptions {
   each?: boolean;
@@ -490,4 +492,41 @@ export function JsonFieldOptional(
 
 function getVariableName(variableFunction: () => any) {
   return variableFunction.toString().split('.').pop();
+}
+
+export function PermissionsArrayField(
+  options: Omit<ApiPropertyOptions, 'type' | 'enum'> & IEnumFieldOptions = {},
+): PropertyDecorator {
+  const decorators = [
+    IsPermissionsArray({ message: 'Invalid permissions array' }),
+  ];
+
+  if (options.nullable) {
+    decorators.push(IsNullable());
+  }
+  if (options.swagger !== false) {
+    const { required = true, ...restOptions } = options;
+    decorators.push(
+      ApiProperty({
+        type: [String],
+        enumName: restOptions.enumName || 'PermissionEnum',
+        enum: ALL_PERMISSIONS.map((p) => p.name),
+        isArray: true,
+        required: !!required,
+        ...restOptions,
+      }),
+    );
+  }
+
+  return applyDecorators(...decorators);
+}
+
+export function PermissionsArrayFieldOptional(
+  options: Omit<ApiPropertyOptions, 'type' | 'enum' | 'required'> &
+    IEnumFieldOptions = {},
+): PropertyDecorator {
+  return applyDecorators(
+    IsOptional(),
+    PermissionsArrayField({ required: false, ...options }),
+  );
 }
