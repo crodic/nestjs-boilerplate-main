@@ -1,4 +1,5 @@
 import { Uuid } from '@/common/types/common.type';
+import { CaslAbilityFactory } from '@/utils/ability.factory';
 import { Test, TestingModule } from '@nestjs/testing';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
@@ -25,6 +26,7 @@ describe('UserController', () => {
           provide: UserService,
           useValue: userServiceValue,
         },
+        CaslAbilityFactory,
       ],
     }).compile();
 

@@ -47,6 +47,9 @@ export class AuditLogController {
     isPaginated: true,
     paginationType: 'cursor',
   })
+  @CheckPolicies((abilyti: AppAbility) =>
+    abilyti.can(AppActions.Read, AppSubjects.Log),
+  )
   async loadMoreUsers(
     @Query() reqDto: LoadMoreAuditLogsReqDto,
   ): Promise<CursorPaginatedDto<AuditLogResDto>> {
@@ -56,6 +59,9 @@ export class AuditLogController {
   @Get(':id')
   @ApiAuth({ type: AuditLogResDto, summary: 'Find audit log by id' })
   @ApiParam({ name: 'id', type: 'String' })
+  @CheckPolicies((abilyti: AppAbility) =>
+    abilyti.can(AppActions.Read, AppSubjects.Log),
+  )
   async findOne(@Param('id', ParseUUIDPipe) id: Uuid): Promise<AuditLogResDto> {
     return await this.auditLogService.findOne(id);
   }

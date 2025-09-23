@@ -57,16 +57,19 @@ export class RoleController {
   @Get(':id')
   @ApiAuth({ type: RoleResDto, summary: 'Find role by id' })
   @ApiParam({ name: 'id', type: 'String' })
+  @CheckPolicies((ability: AppAbility) =>
+    ability.can(AppActions.Read, AppSubjects.Role),
+  )
   findOne(@Param('id', ParseUUIDPipe) id: Uuid) {
     return this.roleService.findOne(id);
   }
 
   @Patch(':id')
   @ApiAuth({ type: RoleResDto, summary: 'Update role' })
+  @ApiParam({ name: 'id', type: 'String' })
   @CheckPolicies((ability: AppAbility) =>
     ability.can(AppActions.Update, AppSubjects.Role),
   )
-  @ApiParam({ name: 'id', type: 'String' })
   update(
     @Param('id', ParseUUIDPipe) id: Uuid,
     @Body() updateRoleDto: UpdateRoleReqDto,
@@ -79,6 +82,9 @@ export class RoleController {
     summary: 'Delete role',
     errorResponses: [400, 401, 403, 404, 500],
   })
+  @CheckPolicies((ability: AppAbility) =>
+    ability.can(AppActions.Delete, AppSubjects.Role),
+  )
   @ApiParam({ name: 'id', type: 'String' })
   remove(@Param('id', ParseUUIDPipe) id: Uuid) {
     return this.roleService.remove(id);

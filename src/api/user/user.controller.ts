@@ -52,6 +52,9 @@ export class UserController {
     summary: 'Create user',
     statusCode: HttpStatus.CREATED,
   })
+  @CheckPolicies((ability: AppAbility) =>
+    ability.can(AppActions.Create, AppSubjects.User),
+  )
   async createUser(
     @Body() createUserDto: CreateUserReqDto,
   ): Promise<UserResDto> {
@@ -80,6 +83,9 @@ export class UserController {
     isPaginated: true,
     paginationType: 'cursor',
   })
+  @CheckPolicies((ability: AppAbility) =>
+    ability.can(AppActions.Read, AppSubjects.User),
+  )
   async loadMoreUsers(
     @Query() reqDto: LoadMoreUsersReqDto,
   ): Promise<CursorPaginatedDto<UserResDto>> {
@@ -89,16 +95,19 @@ export class UserController {
   @Get(':id')
   @ApiAuth({ type: UserResDto, summary: 'Find user by id' })
   @ApiParam({ name: 'id', type: 'String' })
+  @CheckPolicies((ability: AppAbility) =>
+    ability.can(AppActions.Read, AppSubjects.User),
+  )
   async findUser(@Param('id', ParseUUIDPipe) id: Uuid): Promise<UserResDto> {
     return await this.userService.findOne(id);
   }
 
   @Patch(':id')
   @ApiAuth({ type: UserResDto, summary: 'Update user' })
+  @ApiParam({ name: 'id', type: 'String' })
   @CheckPolicies((ability: AppAbility) =>
     ability.can(AppActions.Update, AppSubjects.User),
   )
-  @ApiParam({ name: 'id', type: 'String' })
   updateUser(
     @Param('id', ParseUUIDPipe) id: Uuid,
     @Body() reqDto: UpdateUserReqDto,
@@ -112,6 +121,9 @@ export class UserController {
     errorResponses: [400, 401, 403, 404, 500],
   })
   @ApiParam({ name: 'id', type: 'String' })
+  @CheckPolicies((ability: AppAbility) =>
+    ability.can(AppActions.Delete, AppSubjects.User),
+  )
   removeUser(@Param('id', ParseUUIDPipe) id: Uuid) {
     return this.userService.remove(id);
   }
