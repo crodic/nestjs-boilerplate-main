@@ -1,5 +1,9 @@
 import { Constructor } from '@/common/types/types';
-import { ALL_PERMISSIONS } from '@/utils/permissions.constant';
+import {
+  ALL_PERMISSIONS,
+  AppActions,
+  AppSubjects,
+} from '@/utils/permissions.constant';
 import { applyDecorators } from '@nestjs/common';
 import { ApiProperty, type ApiPropertyOptions } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
@@ -510,7 +514,9 @@ export function PermissionsArrayField(
       ApiProperty({
         type: [String],
         enumName: restOptions.enumName || 'PermissionEnum',
-        enum: ALL_PERMISSIONS.map((p) => p.name),
+        enum: ALL_PERMISSIONS.filter(
+          (e) => e.name !== `${AppActions.Manage}:${AppSubjects.All}`,
+        ).map((p) => p.name),
         isArray: true,
         required: !!required,
         ...restOptions,

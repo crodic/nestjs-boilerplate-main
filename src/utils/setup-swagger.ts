@@ -11,7 +11,11 @@ function setupSwagger(app: INestApplication) {
     .setTitle(appName)
     .setDescription('A boilerplate project')
     .setVersion('1.0')
-    .setContact('Company Name', 'https://example.com', 'contact@company.com')
+    .setContact(
+      'Crodic Crystal',
+      'https://crodic.id.vn',
+      'alice01422@gmail.com',
+    )
     .addBearerAuth()
     .addApiKey({ type: 'apiKey', name: 'Api-Key', in: 'header' }, 'Api-Key')
     .addServer(

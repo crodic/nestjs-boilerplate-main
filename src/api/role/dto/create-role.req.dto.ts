@@ -5,16 +5,14 @@ import {
 } from '@/decorators/field.decorators';
 
 export class CreateRoleReqDto {
-  @StringField()
+  @StringField({ example: 'STAFF' })
   name: string;
 
   @StringFieldOptional()
   description?: string;
 
   @PermissionsArrayField({
-    description: 'List permission for Role',
-    example: ['User:Read', 'User:Write'],
-    required: true,
+    example: ['read:User', 'create:User'],
   })
   permissions: string[];
 }

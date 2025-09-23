@@ -1,3 +1,4 @@
+import { PostEntity } from '@/api/post/entities/post.entity';
 import { UserEntity } from '@/api/user/entities/user.entity';
 import { SYSTEM_ROLE_NAME } from '@/constants/app.constant';
 import {
@@ -10,7 +11,10 @@ import {
 import { Injectable } from '@nestjs/common';
 import { AppActions, AppSubjects } from './permissions.constant';
 
-export type Subjects = InferSubjects<typeof UserEntity> | AppSubjects | 'all';
+export type Subjects =
+  | InferSubjects<typeof UserEntity | typeof PostEntity>
+  | AppSubjects
+  | 'all';
 export type AppAbility = PureAbility<[string, Subjects]>;
 
 @Injectable()

@@ -11,6 +11,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import assert from 'assert';
 import { plainToInstance } from 'class-transformer';
+import { ClsService } from 'nestjs-cls';
 import { Repository } from 'typeorm';
 import { CreateUserReqDto } from './dto/create-user.req.dto';
 import { ListUserReqDto } from './dto/list-user.req.dto';
@@ -26,6 +27,7 @@ export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
+    private cls: ClsService,
   ) {}
 
   async create(dto: CreateUserReqDto): Promise<UserResDto> {
@@ -53,8 +55,8 @@ export class UserService {
       password,
       bio,
       image,
-      createdBy: SYSTEM_USER_ID,
-      updatedBy: SYSTEM_USER_ID,
+      createdBy: this.cls.get('userId') || SYSTEM_USER_ID,
+      updatedBy: this.cls.get('userId') || SYSTEM_USER_ID,
     });
 
     const savedUser = await this.userRepository.save(newUser);
