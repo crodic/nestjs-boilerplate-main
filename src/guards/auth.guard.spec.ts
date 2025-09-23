@@ -1,7 +1,9 @@
 import { AuthService } from '@/api/auth/auth.service';
+import { CaslAbilityFactory } from '@/utils/ability.factory';
 import { ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
+import { ClsService } from 'nestjs-cls';
 import { AuthGuard } from './auth.guard';
 
 describe('AuthGuard', () => {
@@ -39,6 +41,11 @@ describe('AuthGuard', () => {
           provide: Reflector,
           useValue: reflector,
         },
+        {
+          provide: ClsService,
+          useValue: { get: jest.fn(), set: jest.fn() },
+        },
+        CaslAbilityFactory,
       ],
     }).compile();
     guard = module.get<AuthGuard>(AuthGuard);
