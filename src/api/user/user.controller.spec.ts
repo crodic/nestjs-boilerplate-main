@@ -1,5 +1,5 @@
 import { Uuid } from '@/common/types/common.type';
-import { CaslAbilityFactory } from '@/utils/ability.factory';
+import { CaslAbilityFactory } from '@/libs/casl/ability.factory';
 import { Test, TestingModule } from '@nestjs/testing';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';

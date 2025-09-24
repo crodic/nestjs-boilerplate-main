@@ -1,4 +1,4 @@
-import { CaslAbilityFactory } from '@/utils/ability.factory';
+import { CaslAbilityFactory } from '@/libs/casl/ability.factory';
 import { Test, TestingModule } from '@nestjs/testing';
 import { RoleController } from './role.controller';
 import { RoleService } from './role.service';

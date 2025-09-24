@@ -3,26 +3,26 @@ import { UserEntity } from '@/api/user/entities/user.entity';
 import { SYSTEM_ROLE_NAME } from '@/constants/app.constant';
 import {
   AbilityBuilder,
-  AbilityClass,
+  createMongoAbility,
   ExtractSubjectType,
   InferSubjects,
-  PureAbility,
+  MongoAbility,
 } from '@casl/ability';
 import { Injectable } from '@nestjs/common';
-import { AppActions, AppSubjects } from './permissions.constant';
+import { RoleEntity } from '../../api/user/entities/role.entity';
+import { AppActions, AppSubjects } from '../../utils/permissions.constant';
 
 export type Subjects =
-  | InferSubjects<typeof UserEntity | typeof PostEntity>
+  | InferSubjects<typeof UserEntity | typeof PostEntity | typeof RoleEntity>
   | AppSubjects
   | 'all';
-export type AppAbility = PureAbility<[string, Subjects]>;
+// export type AppAbility = PureAbility<[string, Subjects]>;
+export type AppAbility = MongoAbility<[AppActions, Subjects]>;
 
 @Injectable()
 export class CaslAbilityFactory {
   createForUser(user: UserEntity) {
-    const { can, build } = new AbilityBuilder<AppAbility>(
-      PureAbility as AbilityClass<AppAbility>,
-    );
+    const { can, build } = new AbilityBuilder<AppAbility>(createMongoAbility);
 
     if (user.role?.name === SYSTEM_ROLE_NAME) {
       can(AppActions.Manage, AppSubjects.All);

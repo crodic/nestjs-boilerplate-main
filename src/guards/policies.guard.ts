@@ -3,7 +3,7 @@ import {
   CHECK_POLICIES_KEY,
   PolicyHandler,
 } from '@/decorators/policies.decorator';
-import { CaslAbilityFactory } from '@/utils/ability.factory';
+import { CaslAbilityFactory } from '@/libs/casl/ability.factory';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
