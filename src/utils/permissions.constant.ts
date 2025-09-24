@@ -33,4 +33,7 @@ export const ALL_PERMISSIONS = [
   { name: `${AppActions.Manage}:${AppSubjects.All}` },
 ];
 
-export const ADMIN_FULL_ACCESS = { action: AppActions.Manage, subject: 'all' };
+export const ADMIN_FULL_ACCESS = {
+  action: AppActions.Manage,
+  subject: AppSubjects.All,
+};

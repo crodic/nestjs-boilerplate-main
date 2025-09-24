@@ -1,4 +1,4 @@
-import { AppAbility } from '@/utils/ability.factory';
+import { AppAbility } from '@/libs/casl/ability.factory';
 import { SetMetadata } from '@nestjs/common';
 
 export interface PolicyHandler {

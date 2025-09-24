@@ -1,5 +1,5 @@
 import { AuthService } from '@/api/auth/auth.service';
-import { CaslAbilityFactory } from '@/utils/ability.factory';
+import { CaslAbilityFactory } from '@/libs/casl/ability.factory';
 import { ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
