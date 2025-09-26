@@ -48,7 +48,6 @@ export class AdminSeeder1758099274256 implements Seeder {
         role: superAdminRole,
         username: SUPER_ADMIN_ACCOUNT.username,
         provider: EUserLoginProvider.LOCAL,
-        providerId: SUPER_ADMIN_ACCOUNT.email,
         createdBy: SYSTEM_USER_ID,
         updatedBy: SYSTEM_USER_ID,
       });
