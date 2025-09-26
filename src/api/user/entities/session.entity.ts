@@ -1,8 +1,10 @@
 import { Uuid } from '@/common/types/common.type';
+import { ESessionLoginScope } from '@/constants/entity.enum';
 import { AbstractEntity } from '@/database/entities/abstract.entity';
 import {
   Column,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -28,14 +30,21 @@ export class SessionEntity extends AbstractEntity {
   })
   hash!: string;
 
+  @Index('IDX_sessions_user_id')
   @Column({
     name: 'user_id',
     type: 'uuid',
   })
   userId: Uuid;
 
-  @Column({ type: 'enum', enum: ['portal', 'client'], nullable: false })
-  loginScope: 'portal' | 'client';
+  @Column({
+    type: 'enum',
+    enum: ESessionLoginScope,
+    enumName: 'sessions_loginscope_enum',
+    nullable: false,
+    name: 'login_scope',
+  })
+  loginScope: ESessionLoginScope;
 
   @JoinColumn({
     name: 'user_id',

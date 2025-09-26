@@ -1,4 +1,4 @@
-import { LoginScope } from '@/constants/app.constant';
+import { ESessionLoginScope } from '@/constants/entity.enum';
 import {
   EnumField,
   NumberField,
@@ -21,8 +21,8 @@ export class LoginResDto {
   refreshToken!: string;
 
   @Expose()
-  @EnumField(() => LoginScope)
-  scope: 'portal' | 'client';
+  @EnumField(() => ESessionLoginScope)
+  scope: ESessionLoginScope;
 
   @Expose()
   @NumberField()
