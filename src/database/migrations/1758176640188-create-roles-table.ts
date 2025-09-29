@@ -15,9 +15,12 @@ export class CreateRolesTable1758176640188 implements MigrationInterface {
           "created_by" character varying NOT NULL,
           "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
           "updated_by" character varying NOT NULL,
-          CONSTRAINT "UQ_648e3f5447f725579d7d4ffdfb7" UNIQUE ("name"),
-          CONSTRAINT "PK_c1433d71a4838793a49dcad46ab" PRIMARY KEY ("id")
+          CONSTRAINT "PK_role_id" PRIMARY KEY ("id")
       )
+    `);
+
+    await queryRunner.query(`
+      CREATE UNIQUE INDEX "UQ_roles_name" ON "roles" ("name") WHERE "deleted_at" IS NULL
     `);
 
     await queryRunner.query(`
@@ -30,6 +33,11 @@ export class CreateRolesTable1758176640188 implements MigrationInterface {
     await queryRunner.query(`
       ALTER TABLE "users" DROP CONSTRAINT "FK_user_role"
     `);
+
+    await queryRunner.query(`
+      DROP INDEX "public"."UQ_roles_name"
+    `);
+
     await queryRunner.query(`
       DROP TABLE "roles"
     `);

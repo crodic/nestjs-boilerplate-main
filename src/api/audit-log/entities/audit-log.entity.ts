@@ -8,14 +8,16 @@ import {
 
 @Entity('audit_logs')
 export class AuditLogEntity {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn('uuid', {
+    primaryKeyConstraintName: 'PK_audit_log_id',
+  })
   id: string;
 
-  @Index()
+  @Index('IDX_audit_logs_entity')
   @Column()
   entity: string;
 
-  @Index()
+  @Index('IDX_audit_logs_entity_id')
   @Column({ nullable: true, name: 'entity_id' })
   entityId: string;
 
@@ -28,10 +30,14 @@ export class AuditLogEntity {
   @Column('json', { nullable: true, name: 'new_value' })
   newValue: any;
 
-  @Index()
+  @Index('IDX_audit_logs_user_id')
   @Column({ nullable: true, name: 'user_id' })
   userId: string;
 
-  @CreateDateColumn({ name: 'created_at' })
+  @CreateDateColumn({
+    name: 'created_at',
+    type: 'timestamptz',
+    default: () => 'now()',
+  })
   createdAt: Date;
 }

@@ -4,6 +4,7 @@ import {
   Column,
   DeleteDateColumn,
   Entity,
+  Index,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -15,10 +16,13 @@ export class RoleEntity extends AbstractEntity {
     Object.assign(this, data);
   }
 
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn('uuid', {
+    primaryKeyConstraintName: 'PK_role_id',
+  })
   id: string;
 
-  @Column({ unique: true })
+  @Index('UQ_roles_name', { unique: true, where: '"deleted_at" IS NULL' })
+  @Column()
   name: string;
 
   @Column({ nullable: true })

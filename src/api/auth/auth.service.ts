@@ -1,8 +1,9 @@
 import { IEmailJob, IVerifyEmailJob } from '@/common/interfaces/job.interface';
 import { Branded } from '@/common/types/types';
 import { AllConfigType } from '@/config/config.type';
-import { LoginScope, SYSTEM_USER_ID } from '@/constants/app.constant';
+import { SYSTEM_USER_ID } from '@/constants/app.constant';
 import { CacheKey } from '@/constants/cache.constant';
+import { ESessionLoginScope } from '@/constants/entity.enum';
 import { ErrorCode } from '@/constants/error-code.constant';
 import { JobName, QueueName } from '@/constants/job.constant';
 import { ValidationException } from '@/exceptions/validation.exception';
@@ -21,7 +22,7 @@ import { plainToInstance } from 'class-transformer';
 import crypto from 'crypto';
 import ms from 'ms';
 import { Repository } from 'typeorm';
-import { RoleEntity } from '../user/entities/role.entity';
+import { RoleEntity } from '../role/entities/role.entity';
 import { SessionEntity } from '../user/entities/session.entity';
 import { UserEntity } from '../user/entities/user.entity';
 import { LoginReqDto } from './dto/login.req.dto';
@@ -90,7 +91,7 @@ export class AuthService {
       userId: user.id,
       createdBy: SYSTEM_USER_ID,
       updatedBy: SYSTEM_USER_ID,
-      loginScope: LoginScope.PORTAL,
+      loginScope: ESessionLoginScope.PORTAL,
     });
     await session.save();
 
@@ -105,7 +106,7 @@ export class AuthService {
 
     return plainToInstance(LoginResDto, {
       userId: user.id,
-      scope: LoginScope.PORTAL,
+      scope: ESessionLoginScope.PORTAL,
       ...token,
     });
   }
@@ -286,5 +287,16 @@ export class AuthService {
       refreshToken,
       tokenExpires,
     } as Token;
+  }
+
+  googleLogin(req) {
+    if (!req.user) {
+      return 'No user from google';
+    }
+
+    return {
+      message: 'User information from google',
+      user: req.user,
+    };
   }
 }

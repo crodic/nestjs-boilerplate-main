@@ -1,6 +1,14 @@
 import { CurrentUser } from '@/decorators/current-user.decorator';
 import { ApiAuth, ApiPublic } from '@/decorators/http.decorators';
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { GoogleOAuthGuard } from '@/guards/google-oauth.guard';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { LoginReqDto } from './dto/login.req.dto';
@@ -80,5 +88,15 @@ export class AuthController {
   @Post('verify/email/resend')
   async resendVerifyEmail() {
     return 'resend-verify-email';
+  }
+
+  @Get()
+  @UseGuards(GoogleOAuthGuard)
+  async googleAuth() {}
+
+  @Get('google-redirect')
+  @UseGuards(GoogleOAuthGuard)
+  googleAuthRedirect(@Request() req) {
+    return this.authService.googleLogin(req);
   }
 }

@@ -1,4 +1,5 @@
 import { PostEntity } from '@/api/post/entities/post.entity';
+import { RoleEntity } from '@/api/role/entities/role.entity';
 import { UserEntity } from '@/api/user/entities/user.entity';
 import { SYSTEM_ROLE_NAME } from '@/constants/app.constant';
 import {
@@ -9,7 +10,6 @@ import {
   MongoAbility,
 } from '@casl/ability';
 import { Injectable } from '@nestjs/common';
-import { RoleEntity } from '../../api/user/entities/role.entity';
 import { AppActions, AppSubjects } from '../../utils/permissions.constant';
 
 export type Subjects =
