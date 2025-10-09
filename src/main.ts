@@ -12,6 +12,7 @@ import { NestFactory, Reflector } from '@nestjs/core';
 import compression from 'compression';
 import helmet from 'helmet';
 import { ClsService } from 'nestjs-cls';
+import { updateGlobalConfig } from 'nestjs-paginate';
 import { Logger } from 'nestjs-pino';
 import { AuthService } from './api/auth/auth.service';
 import { AppModule } from './app.module';
@@ -88,6 +89,13 @@ async function bootstrap() {
   if (isDevelopment) {
     setupSwagger(app);
   }
+
+  updateGlobalConfig({
+    // this is default configuration
+    defaultOrigin: undefined,
+    defaultLimit: 20,
+    defaultMaxLimit: 100,
+  });
 
   await app.listen(configService.getOrThrow('app.port', { infer: true }));
 
