@@ -2,8 +2,15 @@ import { OffsetPaginatedDto } from '@/common/dto/offset-pagination/paginated.dto
 import { Uuid } from '@/common/types/common.type';
 import { paginate } from '@/utils/offset-pagination';
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import assert from 'assert';
 import { plainToInstance } from 'class-transformer';
+import {
+  Paginated,
+  paginate as paginateLib,
+  PaginateQuery,
+} from 'nestjs-paginate';
+import { Repository } from 'typeorm';
 import { ListUserReqDto } from '../user/dto/list-user.req.dto';
 import { CreatePostReqDto } from './dto/create-post.req.dto';
 import { PostResDto } from './dto/post.res.dto';
@@ -12,7 +19,26 @@ import { PostEntity } from './entities/post.entity';
 
 @Injectable()
 export class PostService {
-  constructor() {}
+  constructor(
+    @InjectRepository(PostEntity)
+    private readonly postEntity: Repository<PostEntity>,
+  ) {}
+
+  async findAll(query: PaginateQuery): Promise<Paginated<PostResDto>> {
+    const result = await paginateLib(query, this.postEntity, {
+      sortableColumns: ['id', 'title', 'content'],
+      searchableColumns: ['title', 'content'],
+      defaultSortBy: [['id', 'DESC']],
+      relations: ['user'],
+    });
+
+    return {
+      ...result,
+      data: plainToInstance(PostResDto, result.data, {
+        excludeExtraneousValues: true,
+      }),
+    } as Paginated<PostResDto>;
+  }
 
   async findMany(
     reqDto: ListUserReqDto,

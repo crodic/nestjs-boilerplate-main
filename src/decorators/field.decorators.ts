@@ -8,6 +8,10 @@ import { applyDecorators } from '@nestjs/common';
 import { ApiProperty, type ApiPropertyOptions } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
+  ArrayMaxSize,
+  ArrayMinSize,
+  ArrayNotEmpty,
+  IsArray,
   IsBoolean,
   IsDate,
   IsDefined,
@@ -61,6 +65,15 @@ interface IEnumFieldOptions extends IFieldOptions {
 
 interface IJsonFieldOptions extends IFieldOptions {
   valueType?: string;
+}
+
+export interface IArrayFieldOptions {
+  required?: boolean;
+  nullable?: boolean;
+  minSize?: number;
+  maxSize?: number;
+  notEmpty?: boolean;
+  swagger?: boolean;
 }
 
 type IBooleanFieldOptions = IFieldOptions;
@@ -534,5 +547,54 @@ export function PermissionsArrayFieldOptional(
   return applyDecorators(
     IsOptional(),
     PermissionsArrayField({ required: false, ...options }),
+  );
+}
+
+export function ArrayField(
+  itemType: any,
+  options: Omit<ApiPropertyOptions, 'type' | 'isArray'> &
+    IArrayFieldOptions = {},
+): PropertyDecorator {
+  const decorators = [IsArray(), Type(() => itemType)];
+
+  if (options.notEmpty) {
+    decorators.push(ArrayNotEmpty());
+  }
+
+  if (typeof options.minSize === 'number') {
+    decorators.push(ArrayMinSize(options.minSize));
+  }
+
+  if (typeof options.maxSize === 'number') {
+    decorators.push(ArrayMaxSize(options.maxSize));
+  }
+
+  if (options.nullable) {
+    decorators.push(IsOptional());
+  }
+
+  if (options.swagger !== false) {
+    const { required = true, ...restOptions } = options;
+    decorators.push(
+      ApiProperty({
+        type: itemType,
+        isArray: true,
+        required: !!required,
+        ...restOptions,
+      }),
+    );
+  }
+
+  return applyDecorators(...decorators);
+}
+
+export function ArrayFieldOptional(
+  itemType: any,
+  options: Omit<ApiPropertyOptions, 'type' | 'isArray' | 'required'> &
+    IArrayFieldOptions = {},
+): PropertyDecorator {
+  return applyDecorators(
+    IsOptional({ each: options['each'] }),
+    ArrayField(itemType, { required: false, ...options }),
   );
 }
